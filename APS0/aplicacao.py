@@ -12,6 +12,7 @@
 
 from enlace import *
 import time
+import os
 
 
 # voce deverá descomentar e configurar a porta com através da qual ira fazer comunicaçao
@@ -22,11 +23,14 @@ import time
 #use uma das 3 opcoes para atribuir à variável a porta usada
 #serialName = "/dev/ttyACM0"           # Ubuntu (variacao de)
 #serialName = "/dev/tty.usbmodem1411" # Mac    (variacao de)
-serialName = "COM4"                  # Windows(variacao de)
+#serialName = "COM5"                  # Windows(variacao de)
 
-
-def main():
+def main(sendImage, serialName):
     try:
+        
+        # Sempre salvo a imagem recebida no mesmo diretório que a imagem enviada.
+        saveImage = os.path.dirname(sendImage) + "//received.png"
+
         #declaramos um objeto do tipo enlace com o nome "com". Essa é a camada inferior à aplicação. Observe que um parametro
         #para declarar esse objeto é o nome da porta.
         print("Estabelecendo enlace:")
@@ -42,7 +46,7 @@ def main():
         #aqui você deverá gerar os dados a serem transmitidos. 
         #seus dados a serem transmitidos são uma lista de bytes a serem transmitidos. Gere esta lista com o 
         #nome de txBuffer. Esla sempre irá armazenar os dados a serem enviados.
-        with open("imgs/send.png", "rb") as file1:
+        with open(sendImage, "rb") as file1:
             txBuffer = file1.read()
 
         # print("Enviando buffer: %s" %str(txBuffer))
@@ -81,7 +85,7 @@ def main():
     
         # print (rxBuffer)
 
-        with open("imgs/receive.png", "wb") as file2:
+        with open(saveImage, "wb") as file2:
             file2.write(rxBuffer)
     
         
@@ -95,10 +99,11 @@ def main():
         print("Occoreu um erro!")
         print("")
         print(e)
+        print("")
         com.disable()
 
     #so roda o main quando for executado do terminal ... se for chamado dentro de outro modulo nao roda
 if __name__ == "__main__":
-    main()
+    main(sendImage = os.path.join(os.getcwd(),"APS0/imgs/nickcage.png"), serialName = "COM4")
     
 

@@ -2,6 +2,12 @@
 import tkinter as tk
 import tkinter.filedialog as tkfd
 
+#use uma das 3 opcoes para atribuir à variável a porta usada
+#serialName = "/dev/ttyACM0"           # Ubuntu (variacao de)
+#serialName = "/dev/tty.usbmodem1411" # Mac    (variacao de)
+serialName = "COM4"                  # Windows(variacao de)
+
+import aplicacao
 
 class Application1:
     def __init__(self, master=None):
@@ -27,16 +33,6 @@ class Application1:
             self.data = file
             self.master.destroy()
 
-class Application2:
-    def __init__(self, master=None):
-        self.master = master
-        self.widget1 = tk.Frame(self.master)
-        self.widget1.pack()
-        self.game = tk.Label(self.widget1, text = 'Análise da imagem:')
-        self.game["font"] = ("Verdana", "20", "bold")
-        self.game.config(anchor=tk.CENTER)
-        self.game.pack()
-
 if __name__ == "__main__":
 
     ask_file = tk.Tk()
@@ -44,4 +40,6 @@ if __name__ == "__main__":
     app_1 = Application1(ask_file)
     ask_file.mainloop()
 
-    print(app_1.data)
+    # print(app_1.data)
+
+    aplicacao.main(sendImage = app_1.data, serialName = "COM5")
