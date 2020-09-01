@@ -2,12 +2,14 @@
 import tkinter as tk
 import tkinter.filedialog as tkfd
 
+
 #use uma das 3 opcoes para atribuir à variável a porta usada
 #serialName = "/dev/ttyACM0"           # Ubuntu (variacao de)
 #serialName = "/dev/tty.usbmodem1411" # Mac    (variacao de)
-serialName = "COM4"                  # Windows(variacao de)
+# serialName = "COM4"                  # Windows(variacao de)
 
-import aplicacao
+import aplicacao1 as aplicacao
+import time
 
 class Application1:
     def __init__(self, master=None):
@@ -42,4 +44,8 @@ if __name__ == "__main__":
 
     # print(app_1.data)
 
-    aplicacao.main(sendImage = app_1.data, serialName = "COM5")
+    aplicacao.main(sendImage = app_1.data, serialName = "COM4")
+
+    print("Starting wait")
+    time.sleep(10)
+    print("Wait done!")

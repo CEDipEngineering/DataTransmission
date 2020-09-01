@@ -7,7 +7,9 @@ import tkinter.filedialog as tkfd
 #serialName = "/dev/tty.usbmodem1411" # Mac    (variacao de)
 serialName = "COM4"                  # Windows(variacao de)
 
-import aplicacao
+import aplicacao2 as aplicacao
+import time
+
 
 class Application1:
     def __init__(self, master=None):
@@ -34,12 +36,4 @@ class Application1:
             self.master.destroy()
 
 if __name__ == "__main__":
-
-    ask_file = tk.Tk()
-    ask_file.geometry("900x120")
-    app_1 = Application1(ask_file)
-    ask_file.mainloop()
-
-    # print(app_1.data)
-
-    aplicacao.main(sendImage = app_1.data, serialName = "COM5")
+    aplicacao.main(serialName = "COM5")

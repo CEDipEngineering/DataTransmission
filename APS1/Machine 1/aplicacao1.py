@@ -13,6 +13,7 @@
 from enlace import *
 import time
 import os
+import math
 
 
 # voce deverá descomentar e configurar a porta com através da qual ira fazer comunicaçao
@@ -48,20 +49,27 @@ def main(sendImage, serialName):
         #nome de txBuffer. Esla sempre irá armazenar os dados a serem enviados.
         with open(sendImage, "rb") as file1:
             txBuffer = file1.read()
+        
+        print("Abriu")
 
         # print("Enviando buffer: %s" %str(txBuffer))
         #txBuffer = imagem em bytes!
-    
 
-    
+        n_bytes = math.floor((math.log2(len(txBuffer))/8)) + 1
+        len_bytes = (len(txBuffer).to_bytes(n_bytes,'little'))
+        txBuffer = txBuffer + len_bytes + bytes([n_bytes])  + bytes([0])
+        print("TxBuffer:" + str(txBuffer))
+
         #faça aqui uma conferência do tamanho do seu txBuffer, ou seja, quantos bytes serão enviados.
         
+        print("Tamanho da mensagem:" + str(len(txBuffer)))
     
             
         #finalmente vamos transmitir os tados. Para isso usamos a funçao sendData que é um método da camada enlace.
         #faça um print para avisar que a transmissão vai começar.
         #tente entender como o método send funciona!
         com.sendData(txBuffer)
+        print("Enviei")
 
         # A camada enlace possui uma camada inferior, TX possui um método para conhecermos o status da transmissão
         # Tente entender como esse método funciona e o que ele retorna
@@ -78,17 +86,6 @@ def main(sendImage, serialName):
         #Veja o que faz a funcao do enlaceRX  getBufferLen
       
         #acesso aos bytes recebidos
-        
-        rxBuffer, nRx = com.getData(len(txBuffer))
-
-        time.sleep(1e-3)
-    
-        # print (rxBuffer)
-
-        with open(saveImage, "wb") as file2:
-            file2.write(rxBuffer)
-    
-        
     
         # Encerra comunicação
         print("-------------------------")
