@@ -39,6 +39,8 @@ class Application1:
 
 if __name__ == "__main__":
     try:
+
+        # Interface do Tkinter
         ask_file = tk.Tk()
         ask_file.geometry("900x120")
         app_1 = Application1(ask_file)
@@ -48,12 +50,12 @@ if __name__ == "__main__":
 
 
         print("Estabelecendo enlace client:")
-        comClient = enlace("COM4")
+        comClient = enlace("COM5")
         comClient.enable()
         print("Enlace e comunicação client habilitada!")
 
         print("Estabelecendo enlace server:")
-        comServer = enlace("COM5")
+        comServer = enlace("COM4")
         comServer.enable()
         print("Enlace e comunicação server habilitada!")
 
@@ -63,10 +65,11 @@ if __name__ == "__main__":
         n_bytes = math.floor((math.log2(len(clientBuffer))/8)) + 1
         len_bytes = (len(clientBuffer).to_bytes(n_bytes,'little'))
         clientBuffer = bytes([n_bytes]) + len_bytes + clientBuffer
-        print("clientBuffer:" + str(clientBuffer))
+        print("clientBuffer:" + str(clientBuffer)[0:100] + "...")
 
         print("Tamanho da mensagem:" + str(len(clientBuffer)))
 
+        startTime = time.perf_counter()
         comClient.sendData(clientBuffer)
         print("Client data sent!")
 
@@ -83,6 +86,24 @@ if __name__ == "__main__":
         imageData, nRx = comServer.getData(sizeOfImage)
         print(str(imageData[0:100]) + "...")
 
+        feedback = sizeOfSize.to_bytes(1,"little") + sizeOfImage.to_bytes(sizeOfSize,"little")
+        print("feedback:" + str(feedback))
+        comServer.sendData(feedback)
+        print("Server sent!")
+        
+        time.sleep(0.1)
+        receivedSizeofSize, nRx = comClient.getData(1)
+        receivedSizeofImage, nRx = comClient.getData(int.from_bytes(receivedSizeofSize, "little"))
+        print("A imagem enviada tinha " + str(len(clientBuffer) + "bytes"))
+        print("A mensagem de feedback disse que tinha " + str(receivedSizeofImage) + "bytes")
+
+        if(receivedSizeofImage == len(clientBuffer)):
+            print("A transmissão foi bem sucedida!")
+        else:
+            print("Fracasso na transmissão!")
+
+        endTime = time.perf_counter()
+
 
         with open(saveImage, "wb") as file2:
             file2.write(imageData)
@@ -92,7 +113,7 @@ if __name__ == "__main__":
 
         # Encerra comunicação
         print("-------------------------")
-        print("Comunicação encerrada")
+        print("Comunicação encerrada com tempo de {}s".format(endTime - startTime))
         print("-------------------------")
         comServer.disable()
         comClient.disable()

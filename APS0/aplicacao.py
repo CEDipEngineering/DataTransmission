@@ -104,6 +104,6 @@ def main(sendImage, serialName):
 
     #so roda o main quando for executado do terminal ... se for chamado dentro de outro modulo nao roda
 if __name__ == "__main__":
-    main(sendImage = os.path.join(os.getcwd(),"APS0/imgs/nickcage.png"), serialName = "COM4")
+    main(sendImage = os.path.join(os.getcwd(),"APS0/imgs/test.png"), serialName = "COM4")
     
 

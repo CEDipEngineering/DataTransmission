@@ -68,8 +68,11 @@ class RX(object):
         return(b)
 
     def getNData(self, size):
+        i=0
+        print(f"entrei com size = {size}")
         while(self.getBufferLen() < size):
-            time.sleep(0.05)                 
+            i+=1
+            time.sleep(0.01)                 
         return(self.getBuffer(size))
 
 
