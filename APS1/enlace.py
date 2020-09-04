@@ -24,7 +24,6 @@ class enlace(object):
         self.rx          = RX(self.fisica)
         self.tx          = TX(self.fisica)
         self.connected   = False
-        self.timestamps = []
 
     def enable(self):
         self.fisica.open()
@@ -38,10 +37,8 @@ class enlace(object):
         self.fisica.close()
 
     def sendData(self, data):
-        self.timestamps.append(time.time())
         self.tx.sendBuffer(data)
         
     def getData(self, size):
         data = self.rx.getNData(size)
-        self.timestamps.append(time.time())
         return(data, len(data))

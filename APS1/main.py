@@ -46,7 +46,7 @@ if __name__ == "__main__":
         app_1 = Application1(ask_file)
         ask_file.mainloop()
 
-        saveImage = os.getcwd() + "//imgs//received.png"
+        saveImage = os.getcwd() + "//APS1//imgs//received.png"
 
 
         print("Estabelecendo enlace client:")
@@ -61,47 +61,38 @@ if __name__ == "__main__":
 
         with open(app_1.data, "rb") as file1:
             clientBuffer = file1.read()
+            savedLen = len(clientBuffer)
 
         n_bytes = math.floor((math.log2(len(clientBuffer))/8)) + 1
         len_bytes = (len(clientBuffer).to_bytes(n_bytes,'little'))
         clientBuffer = bytes([n_bytes]) + len_bytes + clientBuffer
-        print("clientBuffer:" + str(clientBuffer)[0:100] + "...")
 
-        print("Tamanho da mensagem:" + str(len(clientBuffer)))
+        #print("clientBuffer:" + str(clientBuffer)[0:100] + "...")
+
+        print("Tamanho da imagem:" + str(len(clientBuffer)))
 
         startTime = time.perf_counter()
         comClient.sendData(clientBuffer)
-        print("Client data sent!")
-
-        time.sleep(0.1)
-
         sizeOfSize, nRx = comServer.getData(1)
         sizeOfSize = int.from_bytes(sizeOfSize,"little")
-        print("Size of Size:" + str(sizeOfSize))
-
         sizeOfImage, nRx = comServer.getData(sizeOfSize)
         sizeOfImage = int.from_bytes(sizeOfImage,"little")
-        print("sizeOfImage:" + str(sizeOfImage))
-        
         imageData, nRx = comServer.getData(sizeOfImage)
-        print(str(imageData[0:100]) + "...")
+        #print(str(imageData[0:100]) + "...")
 
         feedback = sizeOfSize.to_bytes(1,"little") + sizeOfImage.to_bytes(sizeOfSize,"little")
-        print("feedback:" + str(feedback))
         comServer.sendData(feedback)
-        print("Server sent!")
-        
-        time.sleep(0.1)
+
         receivedSizeofSize, nRx = comClient.getData(1)
         receivedSizeofImage, nRx = comClient.getData(int.from_bytes(receivedSizeofSize, "little"))
-        print("A imagem enviada tinha " + str(len(clientBuffer) + "bytes"))
-        print("A mensagem de feedback disse que tinha " + str(receivedSizeofImage) + "bytes")
+        receivedSizeofImage = (int.from_bytes(receivedSizeofImage, "little"))
+        print("A imagem enviada tinha " + str(savedLen) + " bytes")
+        print("A mensagem de feedback disse que tinha " + str(receivedSizeofImage) + " bytes")
 
-        if(receivedSizeofImage == len(clientBuffer)):
+        if receivedSizeofImage == savedLen:
             print("A transmissão foi bem sucedida!")
         else:
             print("Fracasso na transmissão!")
-
         endTime = time.perf_counter()
 
 

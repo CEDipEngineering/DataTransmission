@@ -29,7 +29,7 @@ class RX(object):
                 rxTemp, nRx = self.fisica.read(self.READLEN)
                 if (nRx > 0):
                     self.buffer += rxTemp  
-                time.sleep(0.01)
+                time.sleep(0.02)
 
     def threadStart(self):       
         self.thread = threading.Thread(target=self.thread, args=())
@@ -45,10 +45,7 @@ class RX(object):
         self.threadMutex = True
 
     def getIsEmpty(self):
-        if(self.getBufferLen() == 0):
-            return(True)
-        else:
-            return(False)
+        return self.getBufferLen() == 0
 
     def getBufferLen(self):
         return(len(self.buffer))
@@ -68,11 +65,8 @@ class RX(object):
         return(b)
 
     def getNData(self, size):
-        i=0
-        print(f"entrei com size = {size}")
         while(self.getBufferLen() < size):
-            i+=1
-            time.sleep(0.01)                 
+            time.sleep(0.02)                 
         return(self.getBuffer(size))
 
 
