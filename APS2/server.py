@@ -19,7 +19,7 @@ class Server:
 
             # Get header for message;
             header, nRx = self.com.getData(10)
-            if not self.running():
+            if not self.running:
                 break
             # Analyse Header to know whats going on;
             #   Check message ID, to know if it's a new message.
@@ -47,8 +47,8 @@ class Server:
             EOP, nRx = self.com.getData(4)
 
             # Should be the same everytime, but whatever
-            if not self.rx.getIsEmpty():
-                self.rx.clearBuffer()
+            if not self.com.rx.getIsEmpty():
+                self.com.rx.clearBuffer()
 
 
     def beginRunning(self):

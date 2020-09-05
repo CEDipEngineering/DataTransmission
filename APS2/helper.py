@@ -1,3 +1,5 @@
+import os
+
 class Helper:
     def __init__(self):
         self.storage = {}
@@ -27,7 +29,7 @@ class Helper:
         
         message = head + data + bytes([2,1,7,1])
         
-    def buildPaths(data):
+    def buildPaths(self, data):
         "data == filepath"
         selectedFile = data
         selectedFileExtension = os.path.splitext(selectedFile)[1]

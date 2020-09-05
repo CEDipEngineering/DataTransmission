@@ -75,12 +75,8 @@ if __name__ == "__main__":
         #print("Comunicação encerrada com tempo de {}s".format(endTime - startTime))
         print("END")
         print("-------------------------")
-        comServer.disable()
-        comClient.disable()
     except Exception as e:
         print("Occoreu um erro!")
         print("")
         print(e)
         print("")
-        comServer.disable()
-        comClient.disable()
