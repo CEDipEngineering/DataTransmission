@@ -29,6 +29,8 @@ class Helper:
         
         message = head + data + bytes([2,1,7,1])
         
+        return message
+        
     def buildPaths(self, data):
         "data == filepath"
         selectedFile = data
