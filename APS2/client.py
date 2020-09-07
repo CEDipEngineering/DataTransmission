@@ -26,11 +26,11 @@ class Client:
                 if not self.running:
                     break
 
-                messageID = int.from_bytes(header[0],"little")
-                sizeOfWholeMessage = int.from_bytes(header[1:3],"little") # Size of message in packets
-                packetPosition = int.from_bytes(header[3:5],"little")
-                messageSize = int.from_bytes(header[5],"little")
-                commState = int.from_bytes(header[9],"little")
+                messageID = header[0]
+                sizeOfWholeMessage = int.from_bytes(header[1:3],"big") # Size of message in packets
+                packetPosition = int.from_bytes(header[3:5], "big")
+                messageSize = header[5]
+                commState = header[9]
                 # For now, the remaining bytes are 0
                 
                 # Before analysing, the client only needs to know if it's a comms message.
@@ -58,7 +58,6 @@ class Client:
             print("Checking for response")
             try:
                 buff = self.com.rx.getBuffer(14)
-                print(buff)
             except:
                 print("O server ainda não respondeu, tentar de novo?")
                 j = input("Tentar contato com o servidor? (y/n): ")
@@ -91,3 +90,5 @@ class Client:
         self.running = False
         self.threadActive = False
         self.com.disable()
+
+    def sendDatagram(self):

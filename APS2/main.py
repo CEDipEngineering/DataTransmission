@@ -55,8 +55,6 @@ if __name__ == "__main__":
 
         # Protocol start:
         # ===========================================
-        
-        helper = Helper()
 
         with open(readFile, "rb") as File:
             message = File.read()
