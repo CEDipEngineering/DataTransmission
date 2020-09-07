@@ -25,6 +25,8 @@ class Server:
                 header, nRx = self.com.getData(10)
                 if not self.running:
                     break
+
+                
                 messageID = header[0]
                 sizeOfWholeMessage = int.from_bytes(header[1:3],"big") # Size of message in packets
                 packetPosition = int.from_bytes(header[3:5], "big")
@@ -42,11 +44,11 @@ class Server:
 
                     # Info will be valid if either it's a new message's packet or if it's the next packet of a known message
                     if messageID in self.messages.keys():
-                        if len(self.messages[messageID]) == packetPosition:
+                        if self.countMessages(messageID) == packetPosition:
                             infoIsValid = True
                     elif messageID not in self.messages.keys() and packetPosition == 0:
                         infoIsValid = True
-                        self.messages[messageID] = [[]*sizeOfWholeMessage]
+                        self.messages[messageID] = [[] for i in range(sizeOfWholeMessage)]
 
 
                     # Use header info to decide whether or not to continue
@@ -98,3 +100,11 @@ class Server:
         self.running = False
         self.threadActive = False
         self.com.disable()
+    
+    def countMessages(self, id):
+        start = self.messages[id]
+        j = 0
+        for i in start:
+            if len(i) != 0:
+                j+=1
+        return j

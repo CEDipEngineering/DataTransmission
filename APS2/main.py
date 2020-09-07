@@ -16,6 +16,7 @@ from server import Server
 from client import Client
 import stdMsgs
 import traceback
+import numpy as np
 
 class Application1:
     def __init__(self, master=None):
@@ -66,8 +67,19 @@ if __name__ == "__main__":
         server.beginRunning()
         client.beginRunning()
 
+        verif = client.sendMessage(messageDict.values())
+        if verif == 0:
+            print("Comunicação com servidor morreu...")
+        elif verif == -1:
+            print("Erro interno do servidor")
 
 
+
+        sentData = np.array(server.messages[69])
+        sentData = b"".join(sentData)
+
+        with open(saveFile, "wb") as outFile:
+            outFile.write(sentData)
 
 
 

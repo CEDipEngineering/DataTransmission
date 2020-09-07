@@ -27,8 +27,8 @@ class Client:
                     break
 
                 messageID = header[0]
-                sizeOfWholeMessage = int.from_bytes(header[1:3],"big") # Size of message in packets
-                packetPosition = int.from_bytes(header[3:5], "big")
+                sizeOfWholeMessage = int.from_bytes(header[1:3],"little") # Size of message in packets
+                packetPosition = int.from_bytes(header[3:5], "little")
                 messageSize = header[5]
                 commState = header[9]
                 # For now, the remaining bytes are 0
@@ -56,9 +56,9 @@ class Client:
             print("Sending handshake")
             time.sleep(5)
             print("Checking for response")
-            try:
-                buff = self.com.rx.getBuffer(14)
-            except:
+
+            buff = self.com.rx.getBuffer(14)
+            if len(buff) != 14:    
                 print("O server ainda não respondeu, tentar de novo?")
                 j = input("Tentar contato com o servidor? (y/n): ")
                 if(j.lower() in [" ", "y", ""]):
@@ -67,6 +67,7 @@ class Client:
                     serverAlive = False
                     break
             if buff == stdMsgs.SUCCESSMSG:
+                print("Handshake Success!")
                 serverAlive = True
             
             self.com.rx.clearBuffer()
@@ -91,5 +92,24 @@ class Client:
         self.threadActive = False
         self.com.disable()
 
-    def sendDatagram(self):
-        pass
+    def sendDatagram(self, datagram):
+        success = False
+        counter = 0
+        while not success:
+            self.com.sendData(datagram)
+            resp, nRx = self.com.getData(14)
+            success = resp == stdMsgs.SUCCESSMSG
+            if resp[9] == 4:
+                return -1
+            counter += 1
+            if counter >= 100:
+                return 0
+        return 1
+
+    def sendMessage(self, message):
+        for i in message:
+            verif = self.sendDatagram(i)
+            if verif == 0 or verif == -1:
+                return verif
+            else:
+                continue

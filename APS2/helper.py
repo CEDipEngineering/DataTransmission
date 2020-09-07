@@ -61,7 +61,7 @@ class Helper:
     def assembleDataPackets(self, data, messageID):
         out = {}
         content = self.breakData(data)
-        headerBase = bytes([messageID]) + len(content).to_bytes(2, "big")
+        headerBase = bytes([messageID%256]) + len(content).to_bytes(2, "big")
 
         for i, e in enumerate(content):
             if e is bytes:
