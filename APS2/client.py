@@ -92,3 +92,4 @@ class Client:
         self.com.disable()
 
     def sendDatagram(self):
+        pass
