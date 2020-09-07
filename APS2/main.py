@@ -8,11 +8,14 @@ import tkinter.filedialog as tkfd
 #serialName = "/dev/tty.usbmodem1411" # Mac    (variacao de)
 # serialName = "COM4"                  # Windows(variacao de)
 
-from enlace import *
 import time
 import os
 import math
 from helper import Helper
+from server import Server
+from client import Client
+import stdMsgs
+import traceback
 
 class Application1:
     def __init__(self, master=None):
@@ -53,8 +56,17 @@ if __name__ == "__main__":
         # Protocol start:
         # ===========================================
         
+        helper = Helper()
 
+        with open(readFile, "rb") as File:
+            message = File.read()
 
+        messageDict = helper.assembleDataPackets(message, 69)
+
+        server = Server("COM4")
+        client = Client("COM5")
+        server.beginRunning()
+        client.beginRunning()
 
 
 
@@ -75,8 +87,12 @@ if __name__ == "__main__":
         #print("Comunicação encerrada com tempo de {}s".format(endTime - startTime))
         print("END")
         print("-------------------------")
+        server.killProcess()
+        client.killProcess()
     except Exception as e:
         print("Occoreu um erro!")
         print("")
-        print(e)
+        traceback.print_exc()
         print("")
+        server.killProcess()
+        client.killProcess()

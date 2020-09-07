@@ -10,12 +10,12 @@ The following structure is to be adopted for a data packet:
 In the 10 bytes that constitute the header, one must specify all required information for the server to process and store the information sent.
  
 1. Message ID
-2. Size of Whole Message 
-3. Position of Packet in Message (PacketPosition starts at 0)
-4. Bytes of Data in this packet
-5. 0
-6. 0
+2. Size of Whole Message (1)
+3. Size of Whole Message (2)
+4. Position of Packet in Message (PacketPosition starts at 0) (1)
+5. Position of Packet in Message (PacketPosition starts at 0) (2)
+6. Bytes of Data in this packet
 7. 0
 8. 0
 9. 0
-10. Comms Feedback (0 = Ignore; 1 = Handshake; 2 = Transmission failed, repeat; 3 = Transmission success, continue; 4 = Internal server error, end comms;)
+10. Comms Feedback (0 = Ignore; 1 = Handshake; 2 = Transmission failed, repeat; 3 = Transmission success, continue; 4 = Internal server error, end comms; 5 = Internal client error, end comms;) 
