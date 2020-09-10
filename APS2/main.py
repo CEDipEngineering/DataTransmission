@@ -67,12 +67,19 @@ if __name__ == "__main__":
         server.beginRunning()
         client.beginRunning()
 
+        print("==================================== \nBeginning communications: \n====================================\n")
+        print(f"""
+        Size of message (in packets):{len(messageDict.values())}
+        Message filename: {readFile}        
+        \n
+        """)
+        startTime = time.process_time()
         verif = client.sendMessage(messageDict.values())
         if verif == 0:
             print("Comunicação com servidor morreu...")
         elif verif == -1:
             print("Erro interno do servidor")
-
+        endTime = time.process_time()
 
 
         sentData = np.array(server.messages[69])
@@ -93,9 +100,10 @@ if __name__ == "__main__":
 
         # ===========================================
         # Protocol End.
-        print("-------------------------")
-        #print("Comunicação encerrada com tempo de {}s".format(endTime - startTime))
-        print("END")
+        print("\n-------------------------")
+        print("Transmission concluded in {:.02f}s".format(endTime - startTime))
+        print(f"Approximated speed: {(len(message)*(1/1000))/(endTime - startTime):.05f}kbps")
+        # print("END")
         print("-------------------------")
         server.killProcess()
         client.killProcess()

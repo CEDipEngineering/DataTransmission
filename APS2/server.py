@@ -25,7 +25,6 @@ class Server:
                 header, nRx = self.com.getData(10)
                 if not self.running:
                     break
-
                 
                 messageID = header[0]
                 sizeOfWholeMessage = int.from_bytes(header[1:3],"big") # Size of message in packets
@@ -40,7 +39,17 @@ class Server:
                     #   Check message ID, to know if it's a new message.
                     #   Any message that is being received, should be of same size every time,
                     #   And also be of index +1 over the last message of that ID
+                    # print(f"packetPos {packetPosition, header[3:5]}; sizeOfWhole {sizeOfWholeMessage, header[1:3]}")
+
                     infoIsValid = False
+
+
+                    if packetPosition > sizeOfWholeMessage:
+                        print(f"The server has found an error!")
+                        print(f"The indicated packet position {packetPosition} is outside the bounds of the message (length {sizeOfWholeMessage})")
+                        self.reply("FAIL")
+                        self.com.rx.clearBuffer()
+                        continue
 
                     # Info will be valid if either it's a new message's packet or if it's the next packet of a known message
                     if messageID in self.messages.keys():
@@ -53,6 +62,8 @@ class Server:
 
                     # Use header info to decide whether or not to continue
                     if not infoIsValid:
+                        print(f"An error has ocurred with this data packet!")                        
+                        print(f"The server has responded and is now expecting a repeat of the message.")
                         self.com.rx.clearBuffer()
                         self.reply("FAIL")
                         continue
@@ -65,8 +76,6 @@ class Server:
                     # Store value;
                     self.messages[messageID][packetPosition] = content
 
-
-
                 # Could implement data verification here:
 
                 # Read EOP, just cause (Should be the same everytime, but whatever);
@@ -77,6 +86,11 @@ class Server:
                     self.com.rx.clearBuffer()
 
                 self.reply("PASS")
+                try:
+                    print(f"Message transmission in progress: {100*packetPosition/sizeOfWholeMessage:.02f}% ({packetPosition+1}/{sizeOfWholeMessage} packets)")
+                finally: 
+                    continue
+
 
 
     def beginRunning(self):
@@ -85,8 +99,6 @@ class Server:
         self.running = True
         self.thread = threading.Thread(target = self.threadJob, args=())
         self.thread.start()
-        
-        
 
     def reply(self, keyword):
         try:

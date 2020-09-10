@@ -87,6 +87,6 @@ class fisica(object):
             nRx = len(rxBuffer)
             return(rxBufferDecoded, nRx)
         except :
-            print("[ERRO] interfaceFisica, read, decode. buffer : {}".format(rxBufferValid))
+            # print("[ERRO] interfaceFisica, read, decode. buffer : {}".format(rxBufferValid))
             return(b"", 0)
 
