@@ -69,34 +69,37 @@ if __name__ == "__main__":
 
         with open(readFile, "rb") as File:
             message = File.read()
+        
+        if len(message) > 255*114:
+            print(f"There's been a problem! Your selected file exceeds the maximum filesize of {255*114/1000}KB")
+        else:
+            messageDict = helper.assembleDataPackets(message, messageDescriptor)
 
-        messageDict = helper.assembleDataPackets(message, messageDescriptor)
+            server = Server("COM4")
+            client = Client("COM5")
+            client.buffer = messageDict
+            server.beginRunning()
+            client.beginRunning(1)
 
-        server = Server("COM4")
-        client = Client("COM5")
-        server.beginRunning()
-        client.beginRunning(1)
-
-        print("==================================== \nBeginning communications: \n====================================\n")
-        print(f"""
-        Size of message (in packets):{len(messageDict.values())}
-        Message filename: {readFile}        
-        \n
-        """)
-        startTime = time.process_time()
-        verif = client.sendMessage(messageDict.values())
-        if verif == 0:
-            print("Comunicação com servidor morreu...")
-        elif verif == -1:
-            print("Erro interno do servidor")
-        endTime = time.process_time()
+            print("==================================== \nBeginning communications: \n====================================\n")
+            print(f"""
+            Size of message (in packets):{len(messageDict.values())}
+            Message filename: {readFile}\n
+            """)
+            startTime = time.perf_counter()
+            verif = client.sendMessage()
+            if verif == 0:
+                print("Comunicação com servidor morreu...")
+            elif verif == -1:
+                print("Erro interno do servidor")
+            endTime = time.perf_counter()
 
 
-        sentData = np.array(server.messages[69])
-        sentData = b"".join(sentData)
+            sentData = np.array(server.messages[69])
+            sentData = b"".join(sentData)
 
-        with open(saveFile, "wb") as outFile:
-            outFile.write(sentData)
+            with open(saveFile, "wb") as outFile:
+                outFile.write(sentData)
 
 
 
@@ -115,12 +118,11 @@ if __name__ == "__main__":
         print(f"Approximated speed: {(len(message)*(1/1000))/(endTime - startTime):.05f}kbps")
         # print("END")
         print("-------------------------")
-        server.killProcess()
-        client.killProcess()
     except Exception as e:
         print("Occoreu um erro!")
         print("")
         traceback.print_exc()
         print("")
+    finally:
         server.killProcess()
         client.killProcess()

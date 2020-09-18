@@ -25,21 +25,26 @@ class Server:
                 header, nRx = self.com.getData(10)
                 if not self.running:
                     break
-                
+                print(f"Server receiver header: {header}")
                 sensorID = header[1]
                 serverID = header[2]
                 sizeOfWholeMessage = header[3] # Size of message in packets
                 packetPosition = header[4]
                 messageID = header[5]
                 messageSize = header[8]
-                commState = header[1]
+                commState = header[0]
                 # For now, the remaining bytes are 0
 
-                if serverID != self.id:
+                if commState == 1 and serverID != self.id:
                     # Message is not for me :(
+                    print(f"Server {self.id} has received a message meant for server {serverID}")
                     self.com.rx.clearBuffer()
                     continue
-
+                
+                if commState == 1:
+                    self.com.sendData(stdMsgs.SERVERALIVEMSG)
+                    self.com.rx.clearBuffer()
+                    continue
                 
                 # Before analysing, check if it's a handshake, or something else.
                 if commState == 3:
@@ -84,11 +89,16 @@ class Server:
                     # Store value;
                     self.messages[messageID][packetPosition] = content
 
+                    try:
+                        print(f"Message transmission in progress: {100*packetPosition/sizeOfWholeMessage:.02f}% ({packetPosition+1}/{sizeOfWholeMessage} packets)")
+                    except:
+                        pass
+
                 # Could implement data verification here:
 
                 # Read EOP, just cause (Should be the same everytime, but whatever);
                 EOP, nRx = self.com.getData(4)
-                EOP == bytes([255,176,255,176])
+                print(f"Is the EOP right?: {EOP == bytes([255,176,255,176])}")
                 # Make sure that the buffer is Empty before next message starts (?)
                 if not self.com.rx.getIsEmpty():
                     self.com.rx.clearBuffer()
@@ -96,10 +106,6 @@ class Server:
                 # Enviar mensagem de sucesso
                 self.com.sendData(self.helper.constructParcel(head=bytes([4,0,0,0,0,0,0,self.countMessages(messageID),0,0]), data=bytes([])))
 
-                try:
-                    print(f"Message transmission in progress: {100*packetPosition/sizeOfWholeMessage:.02f}% ({packetPosition+1}/{sizeOfWholeMessage} packets)")
-                finally: 
-                    continue
 
 
 
@@ -116,6 +122,8 @@ class Server:
         self.com.disable()
     
     def countMessages(self, id):
+        if len(self.messages) == 0:
+            return 0
         start = self.messages[id]
         j = 0
         for i in start:

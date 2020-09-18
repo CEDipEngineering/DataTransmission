@@ -3,6 +3,7 @@ from enlace import enlace
 import stdMsgs
 import time
 import random
+from helper import Helper
 
 class Client:
     def __init__(self, port):
@@ -12,19 +13,20 @@ class Client:
         self.threadActive = False
         self.thread = None
         self.buffer = {}
-
+        self.helper = Helper()
+        self.makeNoise = False
+        
     def beginRunning(self, serverID = 1):
         self.com.enable()        
         serverAlive = False
         while not serverAlive:
             print("==================================== \nBeginning client handshake: \n====================================\n")
-            self.com.sendData(//)
+            self.com.sendData(self.helper.constructParcel(head=bytes([1,0,serverID,len(self.buffer),0,0,0,0,0,0]), data=bytes([])))
             print("Sending handshake (Now waiting for 5 seconds)")
-            time.sleep(5)
-            print("Checking for response")
 
-            buff = self.com.rx.getBuffer(14)
-            if len(buff) != 14:    
+            header, nRx = self.com.getData(10,5)
+            # print(f"Client received header: {header}")
+            if len(header) != 10:    
                 print("The server hasn't responded yet...")
                 j = input("Try again? (y/n): ")
                 if(j.lower() in [" ", "y", ""]):
@@ -32,7 +34,12 @@ class Client:
                 else:
                     serverAlive = False
                     break
-            if buff == stdMsgs.SUCCESSMSG:
+            else:
+                EOP, nRx = self.com.getData(4)
+                mess = header + EOP
+                # print(f"Expected SERVERALIVEMSG: {stdMsgs.SERVERALIVEMSG}")
+                # print(f"Received SERVERALIVEMSG: {mess}")
+            if mess == stdMsgs.SERVERALIVEMSG:
                 print("Handshake Success!\n")
                 serverAlive = True
             
@@ -42,40 +49,25 @@ class Client:
             return
         print("==================================== \nClient handshake finished. \n====================================\n")
 
-
-    def reply(self, keyword):
-        try:
-            message = self.codes[keyword]
-        except KeyError:
-            message = self.codes["INTERNALCLIENTERROR"]
-        
-        self.com.sendData(message)
-
     def killProcess(self):
         self.com.disable()
 
     def sendDatagram(self, datagram):
         success = False
-        counter = 0
         while not success:
             mess = datagram[:]
-
-            # This is to introduce noise for testing. Ignore.
-            if random.randint(0,100) < 15:
-                mess = mess[0:3] + bytes([255, 255]) + mess[5:]
-                # print("\nRandom error has been introduced!\n")
+            if self.makeNoise:
+                # This is to introduce noise for testing. Ignore.
+                if random.randint(0,100) < 15:
+                    mess = mess[0:3] + bytes([255, 255]) + mess[5:]
+                    print("\nRandom error has been introduced!\n")
             self.com.sendData(mess)
             resp, nRx = self.com.getData(14)
-            success = resp == stdMsgs.SUCCESSMSG
-            if resp[9] == 4:
-                return -1
-            counter += 1
-            if counter >= 100:
-                return 0
+            success = resp[0] == 4
         return 1
 
-    def sendMessage(self, message):
-        for i in message:
+    def sendMessage(self):
+        for i in self.buffer.values():
             verif = self.sendDatagram(i)
             if verif == 0 or verif == -1:
                 return verif

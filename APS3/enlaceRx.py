@@ -9,6 +9,7 @@
 
 # Importa pacote de tempo
 import time
+import numpy as np
 
 # Threads
 import threading
@@ -64,9 +65,17 @@ class RX(object):
         self.threadResume()
         return(b)
 
-    def getNData(self, size):
-        while(self.getBufferLen() < size and not self.threadStop):
-            time.sleep(0.02)                 
+    def getNData(self, size, timeout):
+        start = time.perf_counter()
+        # print(f"Timeout for getData is: {timeout}s")
+        delta = False
+        # print(f"While check: {self.getBufferLen() < size and not self.threadStop and not delta}")
+        while(self.getBufferLen() < size and not self.threadStop and not delta):
+            delta = (time.perf_counter()-start)>timeout
+            time.sleep(0.02)             
+            # print(f"Time elapsed: {time.perf_counter()-start}")
+        if delta:
+            return b''
         return(self.getBuffer(size))
 
 
