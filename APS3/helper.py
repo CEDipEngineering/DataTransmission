@@ -27,6 +27,10 @@ class Helper:
         # if not (data is bytes):
         #     data = bytes([data])
         
+        # Implement CRC here:
+
+
+
         message = head + data + bytes([255,176,255,176])
         
         return message
@@ -77,14 +81,17 @@ class Helper:
                 messagedescriptor['sensorID'],
                 messagedescriptor['serverID'],
                 len(content),
-                i,
-                messagedescriptor['fileID'],
-                (i//chkStp)*chkStp])
+                i])
+            if messagedescriptor['type'] == 1:
+                head += bytes([messagedescriptor['fileID']])
+            else:
+                head+= bytes([len(e)])
+            head += bytes([(i//chkStp)*chkStp])
             if(i==0):
                 head += bytes([i])
             else:
                 head += bytes([i-1])
-            head += bytes([len(e), 255])
+            head += bytes([0, 0])
             if e is bytes:
                 out[str(i)] = self.constructParcel(head = head,data = e)
             else:

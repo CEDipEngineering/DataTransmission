@@ -60,9 +60,9 @@ if __name__ == "__main__":
         
         messageDescriptor = {
             'type': 3,
-            'sensorID': 2,
+            'sensorID': 69,
             'serverID': 1,
-            'fileID': 69,
+            'fileID': 2,
             'checkpointStep': 10,
         }
         

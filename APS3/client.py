@@ -25,8 +25,8 @@ class Client:
         print("==================================== \nBeginning client handshake: \n====================================\n")
         while not serverAlive and time.perf_counter()-timeoutTimer<=self.timeOut:
             self.com.sendData(self.helper.constructParcel(head=bytes([1,0,serverID,len(self.buffer),0,0,0,0,0,0]), data=bytes([])))
-            print("Sending handshake (Now waiting for 5 seconds)")
-            header, nRx = self.com.getData(10,5)
+            print("Sending handshake (Now waiting for 3 seconds)")
+            header, nRx = self.com.getData(10,3)
             
             if header == b'':
                 self.com.rx.clearBuffer()
