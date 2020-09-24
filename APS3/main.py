@@ -87,11 +87,7 @@ if __name__ == "__main__":
             Message filename: {readFile}\n
             """)
             startTime = time.perf_counter()
-            verif = client.sendMessage()
-            if verif == 0:
-                print("Comunicação com servidor morreu...")
-            elif verif == -1:
-                print("Erro interno do servidor")
+            client.sendMessage()
             endTime = time.perf_counter()
 
 
