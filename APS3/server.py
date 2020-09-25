@@ -4,6 +4,7 @@ import stdMsgs
 import time
 from helper import Helper
 
+
 class Server:
     def __init__(self, port):
         self.com = enlace(port)
@@ -15,18 +16,20 @@ class Server:
         self.id = 1
         self.helper = Helper()
         self.counter = 0
-        self.timeResend = 5
-        self.timeOut = 25
+        self.timeResend = 3
+        self.timeOut = 15
 
 
     def threadJob(self):
         while self.running:
             if self.threadActive:
                 # Get header for message;
+                self.com.rx.clearBuffer()
+                print("Server is receiving next header")
                 header, nRx = self.com.getData(10)
                 if not self.running:
                     break
-                # print(f"Server received header: {header}")
+                print(f"Server received header: {header}")
                 # print(f"Server is idle: {self.idle}")
                 sensorID = header[1]
                 serverID = header[2]
@@ -56,6 +59,9 @@ class Server:
                     if time.perf_counter() - self.timeOutTimer <= self.timeOut:
                         if time.perf_counter() - self.timeResendTimer <= self.timeResend:
                             if commState == 3:
+                                print(f"""timerStates: 
+                                        timerTimeout: {time.perf_counter()-self.timeOutTimer}
+                                        timerResend: {time.perf_counter()-self.timeResendTimer}""")
                                 # Analyse Header to know whats going on;
                                 #   Check message ID, to know if it's a new message.
                                 #   Any message that is being received, should be of same size every time,
@@ -79,6 +85,7 @@ class Server:
                                     infoIsValid = True
                                     self.messages[sensorID] = [[] for i in range(sizeOfWholeMessage)]
 
+                                
 
                                 # Use header info to decide whether or not to continue
                                 if not infoIsValid:
@@ -94,12 +101,7 @@ class Server:
                                 # If message is valid, try to read it.
                                 content, nRx = self.com.getData(messageSize)
 
-                                # Store value;
-                                self.messages[sensorID][self.counter] = content
-                                self.counter += 1
 
-                                # print(f"Current message buffer on server:{[x for x in self.messages[sensorID]]}")
-                                print(f"Message transmission in progress: {100*self.counter/sizeOfWholeMessage:.02f}% ({self.counter}/{sizeOfWholeMessage} packets)")
 
 
                                 # Read EOP, just cause (Should be the same everytime, but whatever);
@@ -108,6 +110,24 @@ class Server:
                                 # Make sure that the buffer is Empty before next message starts (?)
                                 if not self.com.rx.getIsEmpty():
                                     self.com.rx.clearBuffer()
+
+                                expectedCRC = self.helper.CRC(header[:8] + bytes([0,0]) + content + EOP)
+                                # print(f"\nCRC: {expectedCRC}\nheaderCRC: {header[8:10]}\n")
+                                if expectedCRC != header[8:10]:
+                                    # print(f"CRC checked successfuly")
+                                    print(f"An error has ocurred with this data packet!")                        
+                                    print(f"The server has responded and is now expecting a repeat of the message.")
+                                    self.com.rx.clearBuffer()
+                                    self.com.sendData(self.helper.constructParcel(head=bytes([6,0,0,0,0,0,self.counter,0,0,0]), data=bytes([])))
+                                    continue
+
+                                # Store value;
+                                self.messages[sensorID][self.counter] = content
+                                self.counter += 1
+
+                                # print(f"Current message buffer on server:{[x for x in self.messages[sensorID]]}")
+                                print(f"Message transmission in progress: {100*self.counter/sizeOfWholeMessage:.02f}% ({self.counter}/{sizeOfWholeMessage} packets)")
+
 
                                 # Enviar mensagem de sucesso
                                 self.com.sendData(self.helper.constructParcel(head=bytes([4,0,0,0,0,0,0,self.counter,0,0]), data=bytes([])))

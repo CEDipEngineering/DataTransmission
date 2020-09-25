@@ -1,8 +1,11 @@
 import os
+import crcmod
+
 
 class Helper:
     def __init__(self):
         self.storage = {}
+        self.EOP = bytes([255,176,255,176])
 
     def getStorage(self):
         return self.storage
@@ -28,11 +31,13 @@ class Helper:
         #     data = bytes([data])
         
         # Implement CRC here:
-
-
-
-        message = head + data + bytes([255,176,255,176])
         
+        message = head + data + self.EOP
+        extra = self.CRC(message)
+
+        message = head[:8] + extra + data + self.EOP 
+
+
         return message
 
     def buildPaths(self, data):
@@ -99,5 +104,8 @@ class Helper:
         
         return out
     
+    def CRC(self, message):
+        return crcmod.mkCrcFun(0x11021, initCrc=0, xorOut=0xFFFFFFFF)((message)).to_bytes(2,'big')
+
 
 

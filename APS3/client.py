@@ -15,8 +15,8 @@ class Client:
         self.buffer = {}
         self.helper = Helper()
         self.makeNoise = False
-        self.timeResend = 5
-        self.timeOut = 25
+        self.timeResend = 3
+        self.timeOut = 15
         
     def beginRunning(self, serverID = 1):
         self.com.enable()        
@@ -60,12 +60,14 @@ class Client:
     def sendMessage(self):
         timeoutTimer = time.perf_counter()
         counter = 0
+        print("Client started sending message")
         while counter < len(self.buffer.values()) and time.perf_counter()-timeoutTimer<self.timeOut:
             datagram = list(self.buffer.values())[counter]
             
             # Send current packet
             success = False
             resendTimer = time.perf_counter()
+            print(f"Client is starting to send packet {counter}")
             while not success and time.perf_counter() - resendTimer < self.timeResend:
                 
                 # Noise generator for testing
@@ -77,7 +79,10 @@ class Client:
                         print("\nRandom error has been introduced!\n")
                 
                 self.com.sendData(mess)
-                resp, nRx = self.com.getData(14)
+                print("Client is expecting server response  (t4 or t6)")
+                resp, nRx = self.com.getData(14, self.timeResend)
+                if resp == b'':
+                    continue
                 if resp[0] != 4:
                     if resp[0] == 6:
                         counter = resp[6]
