@@ -3,6 +3,9 @@ from enlace import enlace
 import stdMsgs
 import time
 from helper import Helper
+import datetime
+
+today = datetime.datetime.today
 
 
 class Server:
@@ -24,12 +27,14 @@ class Server:
         while self.running:
             if self.threadActive:
                 # Get header for message;
+                logMsg = f"[SERVER] | {today()} | "
+
                 self.com.rx.clearBuffer()
-                print("Server is receiving next header")
+                # print("Server is receiving next header")
                 header, nRx = self.com.getData(10)
                 if not self.running:
                     break
-                print(f"Server received header: {header}")
+                # print(f"Server received header: {header}")
                 # print(f"Server is idle: {self.idle}")
                 sensorID = header[1]
                 serverID = header[2]
@@ -38,19 +43,29 @@ class Server:
                 commState = header[0]
                 if self.idle:    
                 # For now, the remaining bytes are 0
+                    Helper.log.append("[SERVER] Server received idle message\n")
+                    logMsg += f"incoming | {commState} | 14 | {header[8:10]}\n"
+                    Helper.log.append(logMsg)
+                    logMsg = f"[SERVER] | {today()} | "
+
                     if commState == 1 and serverID != self.id:
+
                         # Message is not for me :(
                         print(f"Server {self.id} has received a message meant for server {serverID}")
                         self.com.rx.clearBuffer()
                         
-                    if commState == 1:
+                    elif commState == 1:
+
+                        
                         self.com.sendData(stdMsgs.SERVERALIVEMSG)
+                        logMsg += f"sending  | {stdMsgs.SERVERALIVEMSG[0]} | {len(stdMsgs.SERVERALIVEMSG)} | {stdMsgs.SERVERALIVEMSG[8:10]}\n"
+                        Helper.log.append(logMsg)
                         self.com.rx.clearBuffer()
                         self.idle = False
+                        Helper.log.append("[SERVER] Server is no longer idle!\n")
                         self.counter = 0
                         self.timeOutTimer = time.perf_counter()
                         self.timeResendTimer = time.perf_counter()
-                        
 
                     time.sleep(0.5)
                     continue
@@ -59,22 +74,29 @@ class Server:
                     if time.perf_counter() - self.timeOutTimer <= self.timeOut:
                         if time.perf_counter() - self.timeResendTimer <= self.timeResend:
                             if commState == 3:
-                                print(f"""timerStates: 
-                                        timerTimeout: {time.perf_counter()-self.timeOutTimer}
-                                        timerResend: {time.perf_counter()-self.timeResendTimer}""")
+                                
+                                # print(f"""timerStates: 
+                                #         timerTimeout: {time.perf_counter()-self.timeOutTimer}
+                                #         timerResend: {time.perf_counter()-self.timeResendTimer}""")
                                 # Analyse Header to know whats going on;
                                 #   Check message ID, to know if it's a new message.
                                 #   Any message that is being received, should be of same size every time,
                                 #   And also be of index +1 over the last message of that ID
                                 messageSize = header[5]
-
+                                
+                                logMsg += f"incoming | {commState} | {10+messageSize+4} | {packetPosition} | {self.counter}/{sizeOfWholeMessage} | {header[8:10]}\n"
+                                Helper.log.append(logMsg)
+                                logMsg = f"[SERVER] | {today()} | "
 
                                 infoIsValid = False
                                 if packetPosition > sizeOfWholeMessage:
                                     print(f"The server has found an error!")
                                     print(f"The indicated packet position {packetPosition} is outside the bounds of the message (length {sizeOfWholeMessage})")
-                                    self.com.sendData(self.helper.constructParcel(head=bytes([6,0,0,0,0,0,self.counter,0,0,0]), data=bytes([])))
                                     self.com.rx.clearBuffer()
+                                    mess = self.helper.constructParcel(head=bytes([6,0,0,0,0,0,self.counter,0,0,0]), data=bytes([]))
+                                    self.com.sendData(mess)
+                                    logMsg += f"sending  | 6 | 14 | {mess[8:10]}\n"
+                                    Helper.log.append(logMsg)
                                     continue
 
                                 # Info will be valid if either it's a new message's packet or if it's the next packet of a known message
@@ -92,7 +114,10 @@ class Server:
                                     print(f"An error has ocurred with this data packet!")                        
                                     print(f"The server has responded and is now expecting a repeat of the message.")
                                     self.com.rx.clearBuffer()
-                                    self.com.sendData(self.helper.constructParcel(head=bytes([6,0,0,0,0,0,self.counter,0,0,0]), data=bytes([])))
+                                    mess = self.helper.constructParcel(head=bytes([6,0,0,0,0,0,self.counter,0,0,0]), data=bytes([]))
+                                    self.com.sendData(mess)
+                                    logMsg += f"sending  | 6 | 14 | {mess[8:10]}\n"
+                                    Helper.log.append(logMsg)
                                     continue
                                 # Empty buffer before going back to waiting
                                 
@@ -100,7 +125,7 @@ class Server:
 
                                 # If message is valid, try to read it.
                                 content, nRx = self.com.getData(messageSize)
-
+                            
 
 
 
@@ -118,7 +143,10 @@ class Server:
                                     print(f"An error has ocurred with this data packet!")                        
                                     print(f"The server has responded and is now expecting a repeat of the message.")
                                     self.com.rx.clearBuffer()
-                                    self.com.sendData(self.helper.constructParcel(head=bytes([6,0,0,0,0,0,self.counter,0,0,0]), data=bytes([])))
+                                    mess = self.helper.constructParcel(head=bytes([6,0,0,0,0,0,self.counter,0,0,0]), data=bytes([]))
+                                    self.com.sendData(mess)
+                                    logMsg += f"sending  | 6 | 14 | {mess[8:10]}\n"
+                                    Helper.log.append(logMsg)
                                     continue
 
                                 # Store value;
@@ -130,19 +158,27 @@ class Server:
 
 
                                 # Enviar mensagem de sucesso
-                                self.com.sendData(self.helper.constructParcel(head=bytes([4,0,0,0,0,0,0,self.counter,0,0]), data=bytes([])))
+                                succ = self.helper.constructParcel(head=bytes([4,0,0,0,0,0,0,self.counter,0,0]), data=bytes([]))
+                                self.com.sendData(succ)
+                                logMsg += f"sending  | 4 | 14 | {succ[8:10]}\n"
+                                Helper.log.append(logMsg)
                                 self.timeOutTimer = time.perf_counter()
                                 self.timeResendTimer = time.perf_counter()
                             else:
                                 time.sleep(1)
                                 continue
                         else:
-                            self.com.sendData(self.helper.constructParcel(head=bytes([4,0,0,0,0,0,0,self.counter,0,0]), data=bytes([])))
+                            succ = self.helper.constructParcel(head=bytes([4,0,0,0,0,0,0,self.counter,0,0]), data=bytes([]))
+                            self.com.sendData(succ)
+                            logMsg += f"sending  | 4 | 14 | {succ[8:10]}\n"
+                            Helper.log.append(logMsg)                            
                             self.timeResendTimer = time.perf_counter()
                             continue
                     else:
                         self.idle = True
                         self.com.sendData(stdMsgs.TIMEOUTMSG)
+                        logMsg += f"sending  | 5 | 14 | {stdMsgs.TIMEOUTMSG[8:10]}\n"
+                        Helper.log.append(logMsg)  
                         continue
 
 

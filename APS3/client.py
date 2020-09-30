@@ -5,6 +5,10 @@ import time
 import random
 from helper import Helper
 
+import datetime
+
+today = datetime.datetime.today
+
 class Client:
     def __init__(self, port):
         self.com = enlace(port)
@@ -24,7 +28,15 @@ class Client:
         timeoutTimer = time.perf_counter()
         print("==================================== \nBeginning client handshake: \n====================================\n")
         while not serverAlive and time.perf_counter()-timeoutTimer<=self.timeOut:
-            self.com.sendData(self.helper.constructParcel(head=bytes([1,0,serverID,len(self.buffer),0,0,0,0,0,0]), data=bytes([])))
+            logMsg = f"[CLIENT] | {today()} | "
+            
+            handshake = self.helper.constructParcel(head=bytes([1,0,serverID,len(self.buffer),0,0,0,0,0,0]), data=bytes([]))
+            
+            logMsg += f"sending  | {handshake[0]} | 14 | {handshake[8:10]}\n"
+            Helper.log.append(logMsg)
+            logMsg = f"[CLIENT] | {today()} | "
+
+            self.com.sendData(handshake)
             print("Sending handshake (Now waiting for 3 seconds)")
             header, nRx = self.com.getData(10,3)
             
@@ -34,6 +46,9 @@ class Client:
                 continue
             
             else:
+                logMsg += f"incoming | {header[0]} | 14 | {header[8:10]}\n"
+                Helper.log.append(logMsg)
+                logMsg = f"[CLIENT] | {today()} | "
                 # print(f"Client received header: {header}")
                 EOP, nRx = self.com.getData(4)
                 # print(f"EOP Client Handshake is right?: {EOP == bytes([255,176,255,176])}")
@@ -60,14 +75,16 @@ class Client:
     def sendMessage(self):
         timeoutTimer = time.perf_counter()
         counter = 0
-        print("Client started sending message")
+        # print("Client started sending message")
         while counter < len(self.buffer.values()) and time.perf_counter()-timeoutTimer<self.timeOut:
             datagram = list(self.buffer.values())[counter]
+
+            logMsg = f"[CLIENT] | {today()} | "
             
             # Send current packet
             success = False
             resendTimer = time.perf_counter()
-            print(f"Client is starting to send packet {counter}")
+            # print(f"Client is starting to send packet {counter}\n")
             while not success and time.perf_counter() - resendTimer < self.timeResend:
                 
                 # Noise generator for testing
@@ -79,10 +96,16 @@ class Client:
                         print("\nRandom error has been introduced!\n")
                 
                 self.com.sendData(mess)
-                print("Client is expecting server response  (t4 or t6)")
+                logMsg += f"sending  | {mess[0]} | {10+mess[5]+4} | {mess[4]} | {counter}/{mess[3]} | {mess[8:10]}\n"
+                Helper.log.append(logMsg)
+                logMsg = f"[CLIENT] | {today()} | "
+                # print("Client is expecting server response  (t4 or t6)")
                 resp, nRx = self.com.getData(14, self.timeResend)
                 if resp == b'':
                     continue
+                logMsg += f"incoming | {resp[0]} | 14 | {resp[8:10]}\n"
+                Helper.log.append(logMsg)
+                logMsg = f"[CLIENT] | {today()} | "
                 if resp[0] != 4:
                     if resp[0] == 6:
                         counter = resp[6]
@@ -100,5 +123,7 @@ class Client:
             print(f"Message transmission has finished.")
         else:
             self.com.sendData(stdMsgs.TIMEOUTMSG)
+            logMsg += f"sending  | 5 | 14 | {stdMsgs.TIMEOUTMSG[8:10]}\n"
+            Helper.log.append(logMsg)  
             self.killProcess()
             print(f"Communication has failed!")

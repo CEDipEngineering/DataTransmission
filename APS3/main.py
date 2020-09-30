@@ -18,6 +18,10 @@ import stdMsgs
 import traceback
 import numpy as np
 
+import datetime
+
+today = datetime.datetime.today
+
 class Application1:
     def __init__(self, master=None):
         self.master = master
@@ -79,6 +83,7 @@ if __name__ == "__main__":
             client = Client("COM5")
             client.buffer = messageDict
             server.beginRunning()
+            Helper.log.append(f"\n[APPLICATION] | {today()} | Transmission is about to begin!\n")
             client.beginRunning(1)
 
             print("==================================== \nBeginning communications: \n====================================\n")
@@ -112,6 +117,10 @@ if __name__ == "__main__":
         print("\n-------------------------")
         print("Transmission concluded in {:.02f}s".format(endTime - startTime))
         print(f"Approximated speed: {(len(message)*(1/1000))/(endTime - startTime):.05f}kbps")
+        Helper.log.append(f"\n=====================================\n[APPLICATION] | {today()} | Transmission has ended!\n")
+        Helper.log.append("[APPLICATION] | Transmission concluded in {:.02f}s\n".format(endTime - startTime))
+        Helper.log.append(f"[APPLICATION] | Approximated speed: {(len(message)*(1/1000))/(endTime - startTime):.05f}kbps\n=====================================\n")
+
         # print("END")
         print("-------------------------")
     except Exception as e:
@@ -122,3 +131,6 @@ if __name__ == "__main__":
     finally:
         server.killProcess()
         client.killProcess()
+        # print(Helper.log)
+        with open(f"APS3/logs/log{len(os.listdir(os.path.join(os.getcwd(), 'APS3/logs')))}.txt","w") as f:
+            f.write("".join(Helper.log))

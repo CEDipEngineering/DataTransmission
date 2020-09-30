@@ -4,18 +4,8 @@ import crcmod
 
 class Helper:
     def __init__(self):
-        self.storage = {}
+        Helper.log = ["=======================\nThis is the log!\nMessages will be formatted according to the logs.pdf file\nand will be preceeded by the name of the instance who saved the message.\n=======================\n"]
         self.EOP = bytes([255,176,255,176])
-
-    def getStorage(self):
-        return self.storage
-    
-    def retrieveFromStorage(self, key):
-        try:
-            return self.storage
-        except KeyError as e:
-            print("Key not found", e)
-            return
 
     def constructParcel(self, head, data):
         

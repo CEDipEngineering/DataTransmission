@@ -1,0 +1,59 @@
+=======================
+This is the log!
+Messages will be formatted according to the logs.pdf file
+and will be preceeded by the name of the instance who saved the message.
+=======================
+
+[APPLICATION] | 2020-09-30 12:04:43.240857 | Transmission is about to begin!
+[CLIENT] | 2020-09-30 12:04:43.517626 | sending  | 1 | 14 | b'@\x86'
+[SERVER] Server received idle message
+[SERVER] | 2020-09-30 12:04:43.210134 | incoming | 1 | 14 | b'@\x86'
+[SERVER] | 2020-09-30 12:04:43.656038 | sending  | 2 | 14 | b'Qe'
+[SERVER] Server is no longer idle!
+[CLIENT] | 2020-09-30 12:04:43.518122 | incoming | 2 | 14 | b'Qe'
+[CLIENT] | 2020-09-30 12:04:44.163419 | sending  | 3 | 128 | 0 | 0/10 | b'\x97N'
+[SERVER] | 2020-09-30 12:04:44.163419 | incoming | 3 | 128 | 0 | 0/10 | b'\x97N'
+[SERVER] | 2020-09-30 12:04:44.394059 | sending  | 4 | 14 | b'\xc0\xdd'
+[CLIENT] | 2020-09-30 12:04:44.163419 | incoming | 4 | 14 | b'\xc0\xdd'
+[CLIENT] | 2020-09-30 12:04:44.732331 | sending  | 3 | 128 | 1 | 1/10 | b'\xa6>'
+[SERVER] | 2020-09-30 12:04:44.470937 | incoming | 3 | 128 | 1 | 1/10 | b'\xa6>'
+[SERVER] | 2020-09-30 12:04:44.978371 | sending  | 4 | 14 | b'h\xb3'
+[CLIENT] | 2020-09-30 12:04:44.732331 | incoming | 4 | 14 | b'h\xb3'
+[CLIENT] | 2020-09-30 12:04:45.147507 | sending  | 3 | 128 | 2 | 2/10 | b'\xa0\xf0'
+[SERVER] | 2020-09-30 12:04:45.009595 | incoming | 3 | 128 | 2 | 2/10 | b'\xa0\xf0'
+[SERVER] | 2020-09-30 12:04:45.285866 | sending  | 4 | 14 | b'\xf7f'
+[CLIENT] | 2020-09-30 12:04:45.147507 | incoming | 4 | 14 | b'\xf7f'
+[CLIENT] | 2020-09-30 12:04:45.578044 | sending  | 3 | 128 | 3 | 3/10 | b'v\xa4'
+[SERVER] | 2020-09-30 12:04:45.301740 | incoming | 3 | 128 | 3 | 3/10 | b'v\xa4'
+[SERVER] | 2020-09-30 12:04:45.762537 | sending  | 4 | 14 | b'0~'
+[CLIENT] | 2020-09-30 12:04:45.578044 | incoming | 4 | 14 | b'0~'
+[CLIENT] | 2020-09-30 12:04:46.008567 | sending  | 3 | 128 | 4 | 4/10 | b'\x87\xea'
+[SERVER] | 2020-09-30 12:04:45.778395 | incoming | 3 | 128 | 4 | 4/10 | b'\x87\xea'
+[SERVER] | 2020-09-30 12:04:46.177702 | sending  | 4 | 14 | b'\xaf\xab'
+[CLIENT] | 2020-09-30 12:04:46.008567 | incoming | 4 | 14 | b'\xaf\xab'
+[CLIENT] | 2020-09-30 12:04:46.454471 | sending  | 3 | 128 | 5 | 5/10 | b'B\xe6'
+[SERVER] | 2020-09-30 12:04:46.239675 | incoming | 3 | 128 | 5 | 5/10 | b'B\xe6'
+[SERVER] | 2020-09-30 12:04:46.700459 | sending  | 4 | 14 | b'\x07\xc5'
+[CLIENT] | 2020-09-30 12:04:46.454471 | incoming | 4 | 14 | b'\x07\xc5'
+[CLIENT] | 2020-09-30 12:04:47.100237 | sending  | 3 | 128 | 6 | 6/10 | b'@!'
+[SERVER] | 2020-09-30 12:04:46.792715 | incoming | 3 | 128 | 6 | 6/10 | b'@!'
+[SERVER] | 2020-09-30 12:04:47.284748 | sending  | 4 | 14 | b'\x98\x10'
+[CLIENT] | 2020-09-30 12:04:47.100237 | incoming | 4 | 14 | b'\x98\x10'
+[CLIENT] | 2020-09-30 12:04:47.407780 | sending  | 3 | 128 | 7 | 7/10 | b'Y\x16'
+[SERVER] | 2020-09-30 12:04:47.300147 | incoming | 3 | 128 | 7 | 7/10 | b'Y\x16'
+[SERVER] | 2020-09-30 12:04:47.484636 | sending  | 4 | 14 | b'\x81\xe4'
+[CLIENT] | 2020-09-30 12:04:47.407780 | incoming | 4 | 14 | b'\x81\xe4'
+[CLIENT] | 2020-09-30 12:04:47.945915 | sending  | 3 | 128 | 8 | 8/10 | b'hp'
+[SERVER] | 2020-09-30 12:04:47.638423 | incoming | 3 | 128 | 8 | 8/10 | b'hp'
+[SERVER] | 2020-09-30 12:04:48.145827 | sending  | 4 | 14 | b'\x1e1'
+[CLIENT] | 2020-09-30 12:04:47.945915 | incoming | 4 | 14 | b'\x1e1'
+[CLIENT] | 2020-09-30 12:04:48.222684 | sending  | 3 | 101 | 9 | 9/10 | b'\xe9\xe9'
+[SERVER] | 2020-09-30 12:04:48.161201 | incoming | 3 | 101 | 9 | 9/10 | b'\xe9\xe9'
+[SERVER] | 2020-09-30 12:04:48.268812 | sending  | 4 | 14 | b'\xb6_'
+[CLIENT] | 2020-09-30 12:04:48.222684 | incoming | 4 | 14 | b'\xb6_'
+
+=====================================
+[APPLICATION] | 2020-09-30 12:04:48.745469 | Transmission has ended!
+[APPLICATION] | Transmission concluded in 4.35s
+[APPLICATION] | Approximated speed: 0.25578kbps
+=====================================
