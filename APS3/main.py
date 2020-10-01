@@ -51,6 +51,7 @@ if __name__ == "__main__":
         
         helper = Helper()
 
+        
         # Interface do Tkinter para pegar arquivo a ser enviado.
         ask_file = tk.Tk()
         ask_file.geometry("900x120")
@@ -75,7 +76,8 @@ if __name__ == "__main__":
             message = File.read()
         
         if len(message) > 255*114:
-            print(f"There's been a problem! Your selected file exceeds the maximum filesize of {255*114/1000}KB")
+            print(f"[APPLICATION] There's been a problem! Your selected file exceeds the maximum filesize of {255*114/1000}KB")
+            Helper.log.append(f"[APPLICATION] There's been a problem! Your selected file exceeds the maximum filesize of {255*114/1000}KB")
         else:
             messageDict = helper.assembleDataPackets(message, messageDescriptor)
 
@@ -83,28 +85,29 @@ if __name__ == "__main__":
             client = Client("COM5")
             client.buffer = messageDict
             server.beginRunning()
+
+            Helper.log.append(f"\n[APPLICATION] | The code used to make this is in the following github repository: https://github.com/CEDipEngineering/DataTransmission\n")
+            Helper.log.append(f"[APPLICATION] | The message that will be transmitted has {len(message)} bytes and will be sent over {len(messageDict.values())} data packets\n\n")
             Helper.log.append(f"\n[APPLICATION] | {today()} | Transmission is about to begin!\n")
-            client.beginRunning(1)
-
-            print("==================================== \nBeginning communications: \n====================================\n")
-            print(f"""
-            Size of message (in packets):{len(messageDict.values())}
-            Message filename: {readFile}\n
-            """)
-            startTime = time.perf_counter()
-            client.sendMessage()
-            endTime = time.perf_counter()
+            
+            if client.beginRunning(1):
 
 
-            sentData = np.array(server.messages[69])
-            sentData = b"".join(sentData)
+                print("==================================== \nBeginning communications: \n====================================\n")
+                print(f"""
+                Size of message (in packets):{len(messageDict.values())}
+                Message filename: {readFile}\n
+                """)
+                startTime = time.perf_counter()
+                client.sendMessage()
+                endTime = time.perf_counter()
 
-            with open(saveFile, "wb") as outFile:
-                outFile.write(sentData)
 
+                sentData = np.array(server.messages[69])
+                sentData = b"".join(sentData)
 
-
-
+                with open(saveFile, "wb") as outFile:
+                    outFile.write(sentData)
 
 
 
@@ -112,17 +115,22 @@ if __name__ == "__main__":
 
 
 
-        # ===========================================
-        # Protocol End.
-        print("\n-------------------------")
-        print("Transmission concluded in {:.02f}s".format(endTime - startTime))
-        print(f"Approximated speed: {(len(message)*(1/1000))/(endTime - startTime):.05f}kbps")
-        Helper.log.append(f"\n=====================================\n[APPLICATION] | {today()} | Transmission has ended!\n")
-        Helper.log.append("[APPLICATION] | Transmission concluded in {:.02f}s\n".format(endTime - startTime))
-        Helper.log.append(f"[APPLICATION] | Approximated speed: {(len(message)*(1/1000))/(endTime - startTime):.05f}kbps\n=====================================\n")
 
-        # print("END")
-        print("-------------------------")
+
+
+
+                # ===========================================
+                # Protocol End.
+                print("\n-------------------------")
+                print("Transmission concluded in {:.02f}s".format(endTime - startTime))
+                print(f"Approximated speed: {(len(message)*(1/1000))/(endTime - startTime):.05f}kbps")
+                Helper.log.append(f"\n=====================================\n[APPLICATION] | {today()} | Transmission has ended!\n")
+                Helper.log.append("[APPLICATION] | Transmission concluded in {:.02f}s\n".format(endTime - startTime))
+                Helper.log.append(f"[APPLICATION] | Approximated speed: {(len(message)*(1/1000))/(endTime - startTime):.05f}kbps\n=====================================\n")
+
+                # print("END")
+                print("-------------------------")
+
     except Exception as e:
         print("Occoreu um erro!")
         print("")

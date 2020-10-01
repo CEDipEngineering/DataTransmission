@@ -20,7 +20,7 @@ class Client:
         self.helper = Helper()
         self.makeNoise = False
         self.timeResend = 3
-        self.timeOut = 15
+        self.timeOut = 20
         
     def beginRunning(self, serverID = 1):
         self.com.enable()        
@@ -65,9 +65,14 @@ class Client:
             j = input("Try again? (y/n): ")
             if(j.lower() in [" ", "y", ""]):
                 self.beginRunning(serverID)
+            else:
+                logMsg = f"[CLIENT] | {today()} | "
+                logMsg += f"sending  | 5 | 14 | {stdMsgs.TIMEOUTMSG[8:10]}\n"
+                Helper.log.append(logMsg)
+                return False  
         else:
             print("==================================== \nClient handshake finished. \n====================================\n")
-            return
+            return True
 
     def killProcess(self):
         self.com.disable()
@@ -92,11 +97,11 @@ class Client:
                 if self.makeNoise:
                     # This is to introduce noise for testing. Ignore.
                     if random.randint(0,100) < 25:
-                        mess = mess[0:3] + bytes([random.randint(0,255), random.randint(0,255)]) + mess[5:]
+                        mess = mess[0:4] + bytes([random.randint(0,255)]) + mess[5:]
                         print("\nRandom error has been introduced!\n")
                 
                 self.com.sendData(mess)
-                logMsg += f"sending  | {mess[0]} | {10+mess[5]+4} | {mess[4]} | {counter}/{mess[3]} | {mess[8:10]}\n"
+                logMsg += f"sending  | {mess[0]} | {10+mess[5]+4} | {mess[4]} | {mess[4]}/{mess[3]} | {mess[8:10]}\n"
                 Helper.log.append(logMsg)
                 logMsg = f"[CLIENT] | {today()} | "
                 # print("Client is expecting server response  (t4 or t6)")

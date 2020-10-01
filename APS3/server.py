@@ -20,7 +20,7 @@ class Server:
         self.helper = Helper()
         self.counter = 0
         self.timeResend = 3
-        self.timeOut = 15
+        self.timeOut = 20
 
 
     def threadJob(self):
@@ -56,7 +56,6 @@ class Server:
                         
                     elif commState == 1:
 
-                        
                         self.com.sendData(stdMsgs.SERVERALIVEMSG)
                         logMsg += f"sending  | {stdMsgs.SERVERALIVEMSG[0]} | {len(stdMsgs.SERVERALIVEMSG)} | {stdMsgs.SERVERALIVEMSG[8:10]}\n"
                         Helper.log.append(logMsg)

@@ -1,0 +1,33 @@
+=======================
+This is the log!
+Messages will be formatted according to the logs.pdf file
+and will be preceeded by the name of the instance who saved the message.
+=======================
+
+[APPLICATION] | The code used to make this is in the following github repository: https://github.com/CEDipEngineering/DataTransmission
+[APPLICATION] | The message that will be transmitted has 2087 bytes and will be sent over 19 data packets
+
+
+[APPLICATION] | 2020-10-01 14:51:23.316357 | Transmission is about to begin!
+[CLIENT] | 2020-10-01 14:51:23.700757 | sending  | 1 | 14 | b'\xd8\xf8'
+[SERVER] Server received idle message
+[SERVER] | 2020-10-01 14:51:23.285606 | incoming | 1 | 14 | b'\xd8\xf8'
+[CLIENT] | 2020-10-01 14:51:26.822098 | sending  | 1 | 14 | b'\xd8\xf8'
+[SERVER] Server received idle message
+[SERVER] | 2020-10-01 14:51:23.992919 | incoming | 1 | 14 | b'\xd8\xf8'
+[CLIENT] | 2020-10-01 14:51:30.051057 | sending  | 1 | 14 | b'\xd8\xf8'
+[SERVER] Server received idle message
+[SERVER] | 2020-10-01 14:51:26.975838 | incoming | 1 | 14 | b'\xd8\xf8'
+[CLIENT] | 2020-10-01 14:51:33.233884 | sending  | 1 | 14 | b'\xd8\xf8'
+[SERVER] Server received idle message
+[SERVER] | 2020-10-01 14:51:30.250921 | incoming | 1 | 14 | b'\xd8\xf8'
+[CLIENT] | 2020-10-01 14:51:36.355182 | sending  | 1 | 14 | b'\xd8\xf8'
+[SERVER] Server received idle message
+[SERVER] | 2020-10-01 14:51:33.495252 | incoming | 1 | 14 | b'\xd8\xf8'
+[CLIENT] | 2020-10-01 14:51:39.491883 | sending  | 1 | 14 | b'\xd8\xf8'
+[SERVER] Server received idle message
+[SERVER] | 2020-10-01 14:51:36.555070 | incoming | 1 | 14 | b'\xd8\xf8'
+[CLIENT] | 2020-10-01 14:51:42.628605 | sending  | 1 | 14 | b'\xd8\xf8'
+[SERVER] Server received idle message
+[SERVER] | 2020-10-01 14:51:39.691770 | incoming | 1 | 14 | b'\xd8\xf8'
+[CLIENT] | 2020-10-01 14:51:46.657273 | sending  | 5 | 14 | b'!\xe2'

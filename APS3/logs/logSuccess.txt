@@ -1,0 +1,63 @@
+=======================
+This is the log!
+Messages will be formatted according to the logs.pdf file
+and will be preceeded by the name of the instance who saved the message.
+=======================
+
+[APPLICATION] | The code used to make this is in the following github repository: https://github.com/CEDipEngineering/DataTransmission
+[APPLICATION] | The message that will be transmitted has 1113 bytes and will be sent over 10 data packets
+
+
+[APPLICATION] | 2020-10-01 14:30:16.652612 | Transmission is about to begin!
+[CLIENT] | 2020-10-01 14:30:17.052388 | sending  | 1 | 14 | b'@\x86'
+[SERVER] Server received idle message
+[SERVER] | 2020-10-01 14:30:16.621889 | incoming | 1 | 14 | b'@\x86'
+[SERVER] | 2020-10-01 14:30:17.160018 | sending  | 2 | 14 | b'Qe'
+[SERVER] Server is no longer idle!
+[CLIENT] | 2020-10-01 14:30:17.052388 | incoming | 2 | 14 | b'Qe'
+[CLIENT] | 2020-10-01 14:30:17.944213 | sending  | 3 | 128 | 0 | 0/10 | b'\x97N'
+[SERVER] | 2020-10-01 14:30:17.682802 | incoming | 3 | 128 | 0 | 0/10 | b'\x97N'
+[SERVER] | 2020-10-01 14:30:18.097953 | sending  | 4 | 14 | b'\xc0\xdd'
+[CLIENT] | 2020-10-01 14:30:17.944213 | incoming | 4 | 14 | b'\xc0\xdd'
+[CLIENT] | 2020-10-01 14:30:18.297863 | sending  | 3 | 128 | 1 | 1/10 | b'\xa6>'
+[SERVER] | 2020-10-01 14:30:18.113330 | incoming | 3 | 128 | 1 | 1/10 | b'\xa6>'
+[SERVER] | 2020-10-01 14:30:18.559232 | sending  | 4 | 14 | b'h\xb3'
+[CLIENT] | 2020-10-01 14:30:18.297863 | incoming | 4 | 14 | b'h\xb3'
+[CLIENT] | 2020-10-01 14:30:18.789904 | sending  | 3 | 128 | 2 | 2/10 | b'\xa0\xf0'
+[SERVER] | 2020-10-01 14:30:18.575105 | incoming | 3 | 128 | 2 | 2/10 | b'\xa0\xf0'
+[SERVER] | 2020-10-01 14:30:19.005163 | sending  | 4 | 14 | b'\xf7f'
+[CLIENT] | 2020-10-01 14:30:18.789904 | incoming | 4 | 14 | b'\xf7f'
+[CLIENT] | 2020-10-01 14:30:19.328056 | sending  | 3 | 128 | 3 | 3/10 | b'v\xa4'
+[SERVER] | 2020-10-01 14:30:19.082513 | incoming | 3 | 128 | 3 | 3/10 | b'v\xa4'
+[SERVER] | 2020-10-01 14:30:19.451063 | sending  | 4 | 14 | b'0~'
+[CLIENT] | 2020-10-01 14:30:19.328056 | incoming | 4 | 14 | b'0~'
+[CLIENT] | 2020-10-01 14:30:19.727842 | sending  | 3 | 128 | 4 | 4/10 | b'\x87\xea'
+[SERVER] | 2020-10-01 14:30:19.466440 | incoming | 3 | 128 | 4 | 4/10 | b'\x87\xea'
+[SERVER] | 2020-10-01 14:30:19.958447 | sending  | 4 | 14 | b'\xaf\xab'
+[CLIENT] | 2020-10-01 14:30:19.727842 | incoming | 4 | 14 | b'\xaf\xab'
+[CLIENT] | 2020-10-01 14:30:20.066098 | sending  | 3 | 128 | 5 | 5/10 | b'B\xe6'
+[SERVER] | 2020-10-01 14:30:20.004606 | incoming | 3 | 128 | 5 | 5/10 | b'B\xe6'
+[SERVER] | 2020-10-01 14:30:20.296739 | sending  | 4 | 14 | b'\x07\xc5'
+[CLIENT] | 2020-10-01 14:30:20.066098 | incoming | 4 | 14 | b'\x07\xc5'
+[CLIENT] | 2020-10-01 14:30:20.465879 | sending  | 3 | 128 | 6 | 6/10 | b'@!'
+[SERVER] | 2020-10-01 14:30:20.312589 | incoming | 3 | 128 | 6 | 6/10 | b'@!'
+[SERVER] | 2020-10-01 14:30:20.742621 | sending  | 4 | 14 | b'\x98\x10'
+[CLIENT] | 2020-10-01 14:30:20.465879 | incoming | 4 | 14 | b'\x98\x10'
+[CLIENT] | 2020-10-01 14:30:20.988660 | sending  | 3 | 128 | 7 | 7/10 | b'Y\x16'
+[SERVER] | 2020-10-01 14:30:20.820017 | incoming | 3 | 128 | 7 | 7/10 | b'Y\x16'
+[SERVER] | 2020-10-01 14:30:21.127048 | sending  | 4 | 14 | b'\x81\xe4'
+[CLIENT] | 2020-10-01 14:30:20.988660 | incoming | 4 | 14 | b'\x81\xe4'
+[CLIENT] | 2020-10-01 14:30:21.373036 | sending  | 3 | 128 | 8 | 8/10 | b'hp'
+[SERVER] | 2020-10-01 14:30:21.158268 | incoming | 3 | 128 | 8 | 8/10 | b'hp'
+[SERVER] | 2020-10-01 14:30:21.572924 | sending  | 4 | 14 | b'\x1e1'
+[CLIENT] | 2020-10-01 14:30:21.373036 | incoming | 4 | 14 | b'\x1e1'
+[CLIENT] | 2020-10-01 14:30:21.619074 | sending  | 3 | 101 | 9 | 9/10 | b'\xe9\xe9'
+[SERVER] | 2020-10-01 14:30:21.604206 | incoming | 3 | 101 | 9 | 9/10 | b'\xe9\xe9'
+[SERVER] | 2020-10-01 14:30:21.711331 | sending  | 4 | 14 | b'\xb6_'
+[CLIENT] | 2020-10-01 14:30:21.619074 | incoming | 4 | 14 | b'\xb6_'
+
+=====================================
+[APPLICATION] | 2020-10-01 14:30:22.326370 | Transmission has ended!
+[APPLICATION] | Transmission concluded in 4.06s
+[APPLICATION] | Approximated speed: 0.27419kbps
+=====================================
